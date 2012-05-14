@@ -732,4 +732,22 @@ config TOUCHSCREEN_TPS6507X
 	  To compile this driver as a module, choose M here: the
 	  module will be called tps6507x_ts.
 
+config TOUCHSCREEN_MCS6000_TA
+        default n
+        bool "MCS6000 touchscreen driver for LG P500"
+        depends on I2C
+        help
+          Say Y here if you have a LG P500 Optimus One mobile phone.
+
+          If unsure, say N.
+
+config TOUCHSCREEN_MCS6000_CAVEMAN
+        default n
+        bool "MCS6000 touchscreens from Der Caveman"
+        depends on I2C
+        help
+          Say Y here if you have a MCS6000 touchscreen.
+
+          If unsure, say N.
+
 endif
