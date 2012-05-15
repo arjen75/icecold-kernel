@@ -63,6 +63,12 @@ enum {
 
 #ifdef CONFIG_MSM_GPIOMUX
 
+/* Before using gpiomux, initialize the subsystem by telling it how many
+ * gpios are going to be managed.  Calling any other gpiomux functions before
+ * msm_gpiomux_init is unsupported.
+ */
+int msm_gpiomux_init(size_t ngpio);
+
 /* Each architecture must provide its own instance of this table.
  * To avoid having gpiomux manage any given gpio, one or both of
  * the entries can avoid setting GPIOMUX_VALID - the absence
