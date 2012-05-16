@@ -79,5 +79,11 @@
 #define INT_CE_IRQ           (32 + 24)
 #endif
 
+/* 7x00A uses 122, but 7x25 has up to 132. */
+#define NR_GPIO_IRQS 133
+#define NR_MSM_IRQS 64
+#define NR_BOARD_IRQS 64
+#define NR_MSM_GPIOS NR_GPIO_IRQS
+
 #define INT_ADSP_A11_SMSM    INT_ADSP_A11
 #endif

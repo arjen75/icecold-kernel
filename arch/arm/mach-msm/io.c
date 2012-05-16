@@ -41,7 +41,7 @@
 	|| defined(CONFIG_ARCH_MSM7X25)
 static struct map_desc msm_io_desc[] __initdata = {
 	MSM_DEVICE(VIC),
-	MSM_CHIP_DEVICE(CSR, MSM7X00),
+	MSM_DEVICE(CSR),
 	MSM_DEVICE(DMOV),
 	MSM_DEVICE(GPIO1),
 	MSM_DEVICE(GPIO2),
@@ -53,9 +53,9 @@ static struct map_desc msm_io_desc[] __initdata = {
 	MSM_DEVICE(GCC),
 #endif
 	{
-		.virtual =  (unsigned long) MSM_SHARED_RAM_BASE,
-		.pfn = __phys_to_pfn(MSM_SHARED_RAM_PHYS),
-		.length =   MSM_SHARED_RAM_SIZE,
+		.virtual =  (unsigned long) MSM_L2CC_BASE,//MSM_SHARED_RAM_BASE,
+		.pfn = __phys_to_pfn(MSM_L2CC_PHYS),//MSM_SHARED_RAM_PHYS),
+		.length =   MSM_L2CC_SIZE,//MSM_SHARED_RAM_SIZE,
 		.type =     MT_DEVICE,
 	},
 };

@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2011-2012, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -13,6 +13,7 @@
 #ifndef _ARCH_ARM_MACH_MSM_SMSM_H_
 #define _ARCH_ARM_MACH_MSM_SMSM_H_
 
+#include <linux/notifier.h>
 #if defined(CONFIG_MSM_N_WAY_SMSM)
 enum {
 	SMSM_APPS_STATE,
@@ -123,11 +124,20 @@ int smsm_state_cb_register(uint32_t smsm_entry, uint32_t mask,
 	void *data);
 int smsm_state_cb_deregister(uint32_t smsm_entry, uint32_t mask,
 	void (*notify)(void *, uint32_t, uint32_t), void *data);
+int smsm_driver_state_notifier_register(struct notifier_block *nb);
+int smsm_driver_state_notifier_unregister(struct notifier_block *nb);
 void smsm_print_sleep_info(uint32_t sleep_delay, uint32_t sleep_limit,
 	uint32_t irq_mask, uint32_t wakeup_reason, uint32_t pending_irqs);
 void smsm_reset_modem(unsigned mode);
 void smsm_reset_modem_cont(void);
 void smd_sleep_exit(void);
+#ifdef CONFIG_MACH_LGE
+/* Make a api to not report a changed SMSM state to other processor
+ * blue.park@lge.com 2010-04-14
+ */
+int smsm_change_state_nonotify(uint32_t smsm_entry,
+		      uint32_t clear_mask, uint32_t set_mask);
+#endif
 
 #define SMEM_NUM_SMD_STREAM_CHANNELS        64
 #define SMEM_NUM_SMD_BLOCK_CHANNELS         64
@@ -212,6 +222,11 @@ enum {
 	SMEM_SMEM_LOG_POWER_IDX,
 	SMEM_SMEM_LOG_POWER_WRAP,
 	SMEM_SMEM_LOG_POWER_EVENTS,
+#ifdef CONFIG_LGE_HANDLE_MODEM_CRASH
+	SMEM_LGE_ERR_DATA,
+	SMEM_LGE_ERR_MESSAGE,
+	SMEM_LGE_ERR_MEM_DUMP_REGION,
+#endif
 	SMEM_ERR_CRASH_LOG,
 	SMEM_ERR_F3_TRACE_LOG,
 	SMEM_SMD_BRIDGE_ALLOC_TABLE,
