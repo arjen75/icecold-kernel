@@ -29,6 +29,9 @@ struct msm_acpu_clock_platform_data
 	uint32_t vdd_switch_time_us;
 	unsigned long power_collapse_khz;
 	unsigned long wait_for_irq_khz;
+	unsigned int max_axi_khz;
+	unsigned int max_vdd;
+	int (*acpu_set_vdd) (int mvolts);
 };
 
 struct clk_lookup;

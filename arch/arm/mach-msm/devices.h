@@ -24,6 +24,12 @@ extern struct platform_device msm_device_uart1;
 extern struct platform_device msm_device_uart2;
 extern struct platform_device msm_device_uart3;
 
+extern struct platform_device msm_device_uart_dm1;
+extern struct platform_device msm_device_uart_dm2;
+extern struct platform_device msm_device_uart_dm3;
+extern struct platform_device msm_device_uart_dm12;
+extern struct platform_device msm_device_uart_gsbi9;
+
 extern struct platform_device msm8960_device_uart_gsbi2;
 extern struct platform_device msm8960_device_uart_gsbi5;
 
@@ -39,6 +45,9 @@ extern struct platform_device msm_device_hsusb_host;
 extern struct platform_device msm_device_i2c;
 
 extern struct platform_device msm_device_smd;
+extern struct platform_device msm_device_dmov;
+extern struct platform_device msm_device_dmov_adm0;
+extern struct platform_device msm_device_dmov_adm1;
 
 extern struct platform_device msm_device_nand;
 
@@ -48,6 +57,9 @@ extern struct platform_device msm_device_mdp;
 
 extern struct clk_lookup msm_clocks_7x01a[];
 extern unsigned msm_num_clocks_7x01a;
+
+extern struct clk_lookup msm_clocks_7x27[];
+extern unsigned msm_num_clocks_7x27;
 
 extern struct clk_lookup msm_clocks_7x30[];
 extern unsigned msm_num_clocks_7x30;
