@@ -32,6 +32,11 @@ struct msm_dmov_cmd {
 	void *data;
 };
 
+struct msm_dmov_pdata {
+	int sd;
+	size_t sd_size;
+};
+
 #ifndef CONFIG_ARCH_MSM8X60
 void msm_dmov_enqueue_cmd(unsigned id, struct msm_dmov_cmd *cmd);
 void msm_dmov_stop_cmd(unsigned id, struct msm_dmov_cmd *cmd, int graceful);
@@ -103,8 +108,29 @@ int msm_dmov_exec_cmd(unsigned id, unsigned int cmdptr) { return -EIO; }
 #define DMOV_SDC2_CHAN        8
 #define DMOV_SDC2_CRCI        7
 
+#define DMOV_SDC3_CHAN         20
+#define DMOV_SDC3_CRCI         2
+
+#define DMOV_SDC4_CHAN         21
+#define DMOV_SDC4_CRCI         5
+
+#define DMOV_SDC5_CHAN         21
+#define DMOV_SDC5_CRCI         14
+
 #define DMOV_TSIF_CHAN        10
 #define DMOV_TSIF_CRCI        10
+
+#define DMOV_HSUART1_TX_CHAN   22
+#define DMOV_HSUART1_TX_CRCI   8
+
+#define DMOV_HSUART1_RX_CHAN   23
+#define DMOV_HSUART1_RX_CRCI   9
+
+#define DMOV_HSUART2_TX_CHAN   8
+#define DMOV_HSUART2_TX_CRCI   13
+
+#define DMOV_HSUART2_RX_CHAN   8
+#define DMOV_HSUART2_RX_CRCI   14
 
 #define DMOV_USB_CHAN         11
 

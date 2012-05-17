@@ -45,8 +45,8 @@ static struct resource resources_uart1[] = {
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
-		.start	= MSM7XXX_UART1_PHYS,
-		.end	= MSM7XXX_UART1_PHYS + MSM7XXX_UART1_SIZE - 1,
+		.start	= MSM_UART1_PHYS,
+		.end	= MSM_UART1_PHYS + MSM_UART1_SIZE - 1,
 		.flags	= IORESOURCE_MEM,
 	},
 };
@@ -58,8 +58,8 @@ static struct resource resources_uart2[] = {
 		.flags	= IORESOURCE_IRQ,
 	},
 	{
-		.start	= MSM7XXX_UART2_PHYS,
-		.end	= MSM7XXX_UART2_PHYS + MSM7XXX_UART2_SIZE - 1,
+		.start	= MSM_UART2_PHYS,
+		.end	= MSM_UART2_PHYS + MSM_UART2_SIZE - 1,
 		.flags	= IORESOURCE_MEM,
 	},
 };
@@ -582,18 +582,6 @@ static struct platform_device *msm_sdcc_devices[] __initdata = {
 	&msm_device_sdc3,
 	&msm_device_sdc4,
 };
-
-int __init msm_add_sdcc(unsigned int controller, struct mmc_platform_data *plat)
-{
-	struct platform_device	*pdev;
-
-	if (controller < 1 || controller > 4)
-		return -EINVAL;
-
-	pdev = msm_sdcc_devices[controller-1];
-	pdev->dev.platform_data = plat;
-	return platform_device_register(pdev);
-}
 
 #if defined(CONFIG_FB_MSM_MDP40)
 #define MDP_BASE          0xA3F00000
