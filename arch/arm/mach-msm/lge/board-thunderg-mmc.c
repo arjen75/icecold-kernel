@@ -13,6 +13,7 @@
  */
 
 #include <linux/kernel.h>
+#include <linux/gpio.h>
 #include <linux/init.h>
 #include <linux/platform_device.h>
 #include <linux/delay.h>
@@ -21,6 +22,7 @@
 #include <linux/err.h>
 #include <linux/gpio.h>
 #include <linux/io.h>
+#include <asm/mach-types.h>
 #include <linux/interrupt.h>
 #include <asm/mach/mmc.h>
 #include <mach/vreg.h>
@@ -285,18 +287,9 @@ static struct mmc_platform_data bcm432x_sdcc_wlan_data = {
 /* LGE_CHANGE_E [jisung.yang@lge.com] 2010-04-24, BCM4325 control gpio */
 
 static struct mmc_platform_data msm7x2x_sdc1_data = {
-#ifdef CONFIG_MMC_MSM_CARD_HW_DETECTION
-	.ocr_mask		= MMC_VDD_30_31,
-	.translate_vdd	= msm_sdcc_setup_power,
-	.status 		= thunderg_sdcc_slot_status,
-	.status_irq 	= MSM_GPIO_TO_INT(GPIO_MMC_COVER_DETECT),
-	.irq_flags		= IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-	.mmc_bus_width	= MMC_CAP_4_BIT_DATA,
-#else
-	.ocr_mask		= MMC_VDD_28_29,
+	.ocr_mask	= MMC_VDD_28_29,
 	.translate_vdd	= msm_sdcc_setup_power,
 	.mmc_bus_width  = MMC_CAP_4_BIT_DATA,
-#endif	
 	.msmsdcc_fmin	= 144000,
 	.msmsdcc_fmid	= 24576000,
 	.msmsdcc_fmax	= 49152000,
