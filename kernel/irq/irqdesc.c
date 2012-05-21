@@ -411,7 +411,8 @@ unsigned int irq_get_next_irq(unsigned int offset)
 }
 
 struct irq_desc *
-__irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus)
+__irq_get_desc_lock(unsigned int irq, unsigned long *flags, bool bus,
+		    unsigned int check)
 {
 	struct irq_desc *desc = irq_to_desc(irq);
 

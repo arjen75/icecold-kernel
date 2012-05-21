@@ -89,25 +89,29 @@ typedef irqreturn_t (*irq_handler_t)(int, void *);
  * @flags:	flags (see IRQF_* above)
  * @name:	name of the device
  * @dev_id:	cookie to identify the device
+ * @percpu_dev_id:	cookie to identify the device
  * @next:	pointer to the next irqaction for shared interrupts
  * @irq:	interrupt number
  * @dir:	pointer to the proc/irq/NN/name entry
- * @thread_fn:	interupt handler function for threaded interrupts
+ * @thread_fn:	interrupt handler function for threaded interrupts
  * @thread:	thread pointer for threaded interrupts
  * @thread_flags:	flags related to @thread
+ * @thread_mask:	bitmask for keeping track of @thread activity
  */
 struct irqaction {
-	irq_handler_t handler;
-	unsigned long flags;
-	const char *name;
-	void *dev_id;
-	struct irqaction *next;
-	int irq;
-	struct proc_dir_entry *dir;
-	irq_handler_t thread_fn;
-	struct task_struct *thread;
-	unsigned long thread_flags;
-};
+	irq_handler_t		handler;
+	unsigned long		flags;
+	void			*dev_id;
+	void __percpu		*percpu_dev_id;
+	struct irqaction	*next;
+	int			irq;
+	irq_handler_t		thread_fn;
+	struct task_struct	*thread;
+	unsigned long		thread_flags;
+	unsigned long		thread_mask;
+	const char		*name;
+	struct proc_dir_entry	*dir;
+} ____cacheline_internodealigned_in_smp;
 
 extern irqreturn_t no_action(int cpl, void *dev_id);
 

@@ -331,6 +331,7 @@ static void __init msm7x2x_init_mmc(void)
 #endif
 }
 #else
+}
 #define msm7x2x_init_mmc() do {} while (0)
 #endif
 
