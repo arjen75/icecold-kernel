@@ -18,7 +18,7 @@
 #include <mach/board.h>
 #include "board-thunderg.h"
 
-#define SND(num, desc) { .name = desc, .id = num }
+#define SND(num, desc) { .name = #desc, .id = num }
 static struct snd_endpoint snd_endpoints_list[] = {
 #if 0
 	SND(0,  "HANDSET"),

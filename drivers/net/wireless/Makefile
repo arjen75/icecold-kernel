@@ -61,3 +61,8 @@ obj-$(CONFIG_MWIFIEX)	+= mwifiex/
 
 obj-$(CONFIG_BCM4329)	+= bcm4329/
 obj-$(CONFIG_BCMDHD)	+= bcmdhd/
+
+obj-$(CONFIG_BCM4325)	+= bcm4325/
+ifeq ($(CONFIG_BCM4325),m)
+obj-$(CONFIG_BRCM_USE_STATIC_BUF)	+= bcm4325/
+endif
