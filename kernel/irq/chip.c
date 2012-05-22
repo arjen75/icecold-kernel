@@ -26,7 +26,7 @@
 int irq_set_chip(unsigned int irq, struct irq_chip *chip)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_lock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
 
 	if (!desc)
 		return -EINVAL;
@@ -54,7 +54,7 @@ EXPORT_SYMBOL(irq_set_chip);
 int irq_set_irq_type(unsigned int irq, unsigned int type)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
 	int ret = 0;
 
 	if (!desc)
@@ -77,7 +77,7 @@ EXPORT_SYMBOL(irq_set_irq_type);
 int irq_set_handler_data(unsigned int irq, void *data)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_lock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
 
 	if (!desc)
 		return -EINVAL;
@@ -97,7 +97,7 @@ EXPORT_SYMBOL(irq_set_handler_data);
 int irq_set_msi_desc(unsigned int irq, struct msi_desc *entry)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_lock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
 
 	if (!desc)
 		return -EINVAL;
@@ -118,7 +118,7 @@ int irq_set_msi_desc(unsigned int irq, struct msi_desc *entry)
 int irq_set_chip_data(unsigned int irq, void *data)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_lock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
 
 	if (!desc)
 		return -EINVAL;
@@ -156,22 +156,19 @@ static void irq_state_set_masked(struct irq_desc *desc)
 	irqd_set(&desc->irq_data, IRQD_IRQ_MASKED);
 }
 
-int irq_startup(struct irq_desc *desc, bool resend)
+int irq_startup(struct irq_desc *desc)
 {
-	int ret = 0;
-
 	irq_state_clr_disabled(desc);
 	desc->depth = 0;
 
 	if (desc->irq_data.chip->irq_startup) {
-		ret = desc->irq_data.chip->irq_startup(&desc->irq_data);
+		int ret = desc->irq_data.chip->irq_startup(&desc->irq_data);
 		irq_state_clr_masked(desc);
-	} else {
-		irq_enable(desc);
+		return ret;
 	}
-	if (resend)
-		check_irq_resend(desc, desc->irq_data.irq);
-	return ret;
+
+	irq_enable(desc);
+	return 0;
 }
 
 void irq_shutdown(struct irq_desc *desc)
@@ -572,7 +569,7 @@ __irq_set_handler(unsigned int irq, irq_flow_handler_t handle, int is_chained,
 		  const char *name)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, 0);
 
 	if (!desc)
 		return;
@@ -598,7 +595,7 @@ __irq_set_handler(unsigned int irq, irq_flow_handler_t handle, int is_chained,
 		irq_settings_set_noprobe(desc);
 		irq_settings_set_norequest(desc);
 		irq_settings_set_nothread(desc);
-		irq_startup(desc, true);
+		irq_startup(desc);
 	}
 out:
 	irq_put_desc_busunlock(desc, flags);
@@ -616,7 +613,7 @@ irq_set_chip_and_handler_name(unsigned int irq, struct irq_chip *chip,
 void irq_modify_status(unsigned int irq, unsigned long clr, unsigned long set)
 {
 	unsigned long flags;
-	struct irq_desc *desc = irq_get_desc_lock(irq, &flags);
+	struct irq_desc *desc = irq_get_desc_lock(irq, &flags, 0);
 
 	if (!desc)
 		return;

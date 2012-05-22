@@ -847,7 +847,7 @@ static struct kgsl_device_platform_data kgsl_3d0_pdata = {
 	.clk_map = KGSL_CLK_CORE | KGSL_CLK_IFACE | KGSL_CLK_MEM,
 };
 
-struct platform_device msm_kgsl_3d0 = {
+/*struct platform_device msm_kgsl_3d0 = {
 	.name = "kgsl-3d0",
 	.id = 0,
 	.num_resources = ARRAY_SIZE(kgsl_3d0_resources),
@@ -855,7 +855,7 @@ struct platform_device msm_kgsl_3d0 = {
 	.dev = {
 		.platform_data = &kgsl_3d0_pdata,
 	},
-};
+};*/
 
 struct platform_device *msm_footswitch_devices[] = {
 	FS_PCOM(FS_GFX3D,  "fs_gfx3d"),

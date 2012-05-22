@@ -65,6 +65,7 @@ typedef	void (*irq_preflow_handler_t)(struct irq_data *data);
  * IRQ_NO_BALANCING		- Interrupt cannot be balanced (affinity set)
  * IRQ_MOVE_PCNTXT		- Interrupt can be migrated from process context
  * IRQ_NESTED_TRHEAD		- Interrupt nests into another thread
+ * IRQ_PER_CPU_DEVID		- Dev_id is a per-cpu variable
  */
 enum {
 	IRQ_TYPE_NONE		= 0x00000000,
@@ -87,6 +88,7 @@ enum {
 	IRQ_MOVE_PCNTXT		= (1 << 14),
 	IRQ_NESTED_THREAD	= (1 << 15),
 	IRQ_NOTHREAD		= (1 << 16),
+	IRQ_PER_CPU_DEVID	= (1 << 17),
 };
 
 #define IRQF_MODIFY_MASK	\
