@@ -31,6 +31,7 @@
 #include <mach/msm_iomap.h>
 #include <mach/msm_rpcrouter.h>
 #include <mach/msm_hsusb.h>
+#include <mach/msm_memtypes.h>
 #include <mach/rpc_hsusb.h>
 #include <mach/rpc_pmapp.h>
 #include <linux/android_pmem.h>
@@ -244,30 +245,25 @@ static struct resource kgsl_3d0_resources[] = {
 };
 
 static struct kgsl_device_platform_data kgsl_3d0_pdata = {
-	.pwr_data = {
+	/* bus_freq has been set to 160000 for power savings.
+	* OEMs may modify the value at their discretion for performance
+	* The appropriate maximum replacement for 160000 is:
+	* msm7x2x_clock_data.max_axi_khz
+	*/
 	.pwrlevel = {
-		   	{
-			.gpu_freq = 128000000,
-                        .bus_freq = 128000000,
-			},
+		{
+			.gpu_freq = 0,
+			.bus_freq = 160000000,
+		},
 	},
 	.init_level = 0,
 	.num_levels = 1,
 	.set_grp_async = NULL,
-	.idle_timeout = HZ/5,
-	.nap_allowed = true,
-	},
-	.clk = {
-	.name = {
-	.clk = "grp_clk",
-	.pclk = "grp_pclk",
-	},
-     },
-	.imem_clk_name = {
-	.clk = "imem_clk",
-	.pclk = NULL,
-	},
-	};
+	.idle_timeout = HZ,
+	.strtstp_sleepwake = true,
+	.clk_map = KGSL_CLK_CORE | KGSL_CLK_IFACE | KGSL_CLK_MEM,
+};
+
 
 
 struct platform_device msm_kgsl_3d0 = {
@@ -282,32 +278,6 @@ struct platform_device msm_kgsl_3d0 = {
 
 void __init msm_add_kgsl_device(void) 
 {
-	/* This value has been set to 160000 for power savings. */
-	/* OEMs may modify the value at their discretion for performance */
-	/* The appropriate maximum replacement for 160000 is: */
-	/* clk_get_max_axi_khz() */
-	//kgsl_pdata.high_axi_3d = 160000;
-
-	/* 7x27 doesn't allow graphics clocks to be run asynchronously to */
-	/* the AXI bus */
-	//kgsl_pdata.max_grp2d_freq = 0;
-	//kgsl_pdata.min_grp2d_freq = 0;
-	//kgsl_pdata.set_grp2d_async = NULL;
-	//kgsl_pdata.max_grp3d_freq = 0;
-	//kgsl_pdata.min_grp3d_freq = 0;
-	//kgsl_pdata.set_grp3d_async = NULL;
-	//kgsl_pdata.imem_clk_name = "imem_clk";
-	//kgsl_pdata.grp3d_clk_name = "grp_clk";
-	//kgsl_pdata.grp3d_pclk_name = "grp_pclk";
-	//kgsl_pdata.grp2d0_clk_name = NULL;
-	//kgsl_pdata.idle_timeout_3d = HZ/5;
-	//kgsl_pdata.idle_timeout_2d = 0;
-
-//#ifdef CONFIG_KGSL_PER_PROCESS_PAGE_TABLE
-//	kgsl_pdata.pt_va_size = SZ_32M;
-//#else
-//	kgsl_pdata.pt_va_size = SZ_128M;
-//#endif
 	platform_device_register(&msm_kgsl_3d0);
 }
 #endif
@@ -328,18 +298,21 @@ static struct android_pmem_platform_data android_pmem_pdata = {
 	.name = "pmem",
 	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
 	.cached = 1,
+	.memory_type = MEMTYPE_EBI1,
 };
 
 static struct android_pmem_platform_data android_pmem_adsp_pdata = {
 	.name = "pmem_adsp",
 	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
-	.cached = 1,
+	.cached = 0,
+	.memory_type = MEMTYPE_EBI1,
 };
 
 static struct android_pmem_platform_data android_pmem_audio_pdata = {
 	.name = "pmem_audio",
 	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
 	.cached = 0,
+	.memory_type = MEMTYPE_EBI1,
 };
 
 static struct platform_device android_pmem_device = {
@@ -446,12 +419,19 @@ void __init msm_msm7x2x_allocate_memory_regions(void)
 	}
 
 	size = pmem_fb_size ? : MSM_FB_SIZE;
+	addr = alloc_bootmem_align(size, 0x1000);
+	msm_fb_resources[0].start = __pa(addr);
+	msm_fb_resources[0].end = msm_fb_resources[0].start + size - 1;
+	pr_info("allocating %lu bytes at %p (%lx physical) for fb\n",
+		size, addr, __pa(addr));
+
+/*	size = pmem_fb_size ? : MSM_FB_SIZE;
 	addr = alloc_bootmem(size);
 	msm_fb_resources[0].start = __pa(addr);
 	msm_fb_resources[0].end = msm_fb_resources[0].start + size - 1;
 	pr_info("allocating %lu bytes at %p (%lx physical) for fb\n",
 			size, addr, __pa(addr));
-
+*/
 	size = pmem_kernel_ebi1_size;
 	if (size) {
 		addr = alloc_bootmem_aligned(size, 0x100000);
