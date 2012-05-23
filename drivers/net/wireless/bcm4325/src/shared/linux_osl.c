@@ -200,7 +200,7 @@ osl_attach(void *pdev, uint bustype, bool pkttag)
 		}
 		else {
 			printk("alloc static buf at %x!\n", (unsigned int)bcm_static_buf);
-			init_MUTEX(&bcm_static_buf->static_sem);
+			mutex_init(&bcm_static_buf->static_sem);
 			bcm_static_buf->buf_ptr = (unsigned char *)bcm_static_buf + STATIC_BUF_SIZE;
 		}
 	}
@@ -218,7 +218,7 @@ osl_attach(void *pdev, uint bustype, bool pkttag)
 		for (i = 0; i < MAX_STATIC_PKT_NUM*2; i++)
 			bcm_static_skb->pkt_use[i] = 0;
 
-		init_MUTEX(&bcm_static_skb->osl_pkt_sem);
+		mutex_init(&bcm_static_skb->osl_pkt_sem);
 	}
 #endif	/* USE_STATIC_SKB */
 #endif 
