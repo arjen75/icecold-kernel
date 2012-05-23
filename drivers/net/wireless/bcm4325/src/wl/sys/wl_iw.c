@@ -34,6 +34,7 @@
 #include <proto/ethernet.h>
 
 #include <linux/if_arp.h>
+#include <linux/sched.h>
 #include <asm/uaccess.h>
 
 #ifndef BCMDONGLEHOST
