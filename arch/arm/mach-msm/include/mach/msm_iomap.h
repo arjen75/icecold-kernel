@@ -43,6 +43,7 @@
 #define IOMEM(x)	((void __force __iomem *)(x))
 #endif
 
+#include "msm_iomap-7xxx.h"
 #if defined(CONFIG_ARCH_MSM7X30)
 #include "msm_iomap-7x30.h"
 #elif defined(CONFIG_ARCH_QSD8X50)
@@ -54,6 +55,9 @@
 #endif
 
 #include "msm_iomap-8960.h"
+
+#define MSM_STRONGLY_ORDERED_PAGE	0xFA0F0000
+#define MSM8625_SECONDARY_PHYS		0x0FE00000
 
 #if defined(CONFIG_DEBUG_MSM_UART1)
 #define MSM_DEBUG_UART_BASE 0xFB000000

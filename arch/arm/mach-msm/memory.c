@@ -36,6 +36,7 @@
 #include <linux/android_pmem.h>
 #include <mach/msm_iomap.h>
 #include <mach/socinfo.h>
+#include <linux/sched.h>
 #include <../../mm/mm.h>
 #include <linux/fmem.h>
 

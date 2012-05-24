@@ -25,3 +25,4 @@ extern void __flush_dcache_page(struct address_space *mapping, struct page *page
 
 void __init bootmem_init(void);
 void arm_mm_memblock_reserve(void);
+void __init create_mapping(struct map_desc *md);

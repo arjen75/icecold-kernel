@@ -27,29 +27,5 @@ unsigned long acpuclk_wait_for_irq(void);
 unsigned long acpuclk_power_collapse(void);
 unsigned long acpuclk_get_wfi_rate(void);
 
-void __init msm_acpu_clock_init(struct msm_acpu_clock_platform_data *clkdata)
-{
-	pr_info("acpu_clock_init()\n");
-
-	mutex_init(&drv_state.lock);
-	if (cpu_is_msm7x27())
-		shared_pll_control_init();
-	drv_state.acpu_switch_time_us = clkdata->acpu_switch_time_us;
-	drv_state.max_speed_delta_khz = clkdata->max_speed_delta_khz;
-	drv_state.vdd_switch_time_us = clkdata->vdd_switch_time_us;
-	drv_state.max_axi_khz = clkdata->max_axi_khz;
-	acpu_freq_tbl_fixup();
-	precompute_stepping();
-	if (cpu_is_msm7x25())
-		msm7x25_acpu_pll_hw_bug_fix();
-	acpuclk_init();
-	lpj_init();
-	print_acpu_freq_tbl();
-#ifdef CONFIG_CPU_FREQ_MSM
-	cpufreq_table_init();
-	cpufreq_frequency_table_get_attr(freq_table, smp_processor_id());
-#endif
-}
-
 #endif
 
